@@ -7667,7 +7667,7 @@ class _SfCalendarState extends State<SfCalendar>
         child: _PopupWidget(
             child: Container(
                 margin: const EdgeInsets.all(0),
-                padding: const EdgeInsets.all(5),
+//                 padding: const EdgeInsets.all(5),
                 decoration: _isMobilePlatform
                     ? BoxDecoration(
                         color: _calendarTheme.brightness == Brightness.dark
@@ -7691,6 +7691,7 @@ class _SfCalendarState extends State<SfCalendar>
                         shape: BoxShape.rectangle,
                       ),
                 child: SfDateRangePicker(
+                   backgroundColor: Color(0xff003E5B),
                   showNavigationArrow: true,
                   initialSelectedDate: _currentDate,
                   initialDisplayDate: _currentDate,
@@ -7699,6 +7700,7 @@ class _SfCalendarState extends State<SfCalendar>
                   maxDate: widget.maxDate,
                   selectionColor: todayTextColor,
                   headerStyle: DateRangePickerHeaderStyle(
+                    textStyle: TextStyle(color: Colors.white),
                     textAlign:
                         _isMobilePlatform ? TextAlign.center : TextAlign.left,
                   ),
@@ -8093,81 +8095,164 @@ class _SfCalendarState extends State<SfCalendar>
           bottomPadding;
     }
 
-    return Positioned(
-        top: startPosition,
-        right: 0,
-        left: 0,
-        height: height,
-        child: _OpacityWidget(
-            opacity: _opacity,
-            child: Container(
-                color: widget.monthViewSettings.agendaStyle.backgroundColor ??
-                    _calendarTheme.agendaBackgroundColor,
-                child: MouseRegion(
-                    onEnter: (PointerEnterEvent event) {
-                      _pointerEnterEvent(event, false, isRTL);
-                    },
-                    onExit: _pointerExitEvent,
-                    onHover: (PointerHoverEvent event) {
-                      _pointerHoverEvent(event, false, isRTL);
-                    },
-                    child: GestureDetector(
-                      child: Stack(children: <Widget>[
-                        CustomPaint(
-                          painter: _AgendaDateTimePainter(
-                              currentSelectedDate,
-                              widget.monthViewSettings,
-                              null,
-                              widget.todayHighlightColor ??
-                                  _calendarTheme.todayHighlightColor,
-                              widget.todayTextStyle,
-                              _locale,
-                              _calendarTheme,
-                              _agendaDateNotifier,
-                              _minWidth,
-                              isRTL,
-                              _textScaleFactor,
-                              _isMobilePlatform),
-                          size: Size(_agendaDateViewWidth, height),
+       return Positioned(
+      // agendaedit
+      top: startPosition,
+      right: 0,
+      left: 0,
+      height: height,
+      child: _OpacityWidget(
+        opacity: _opacity,
+        child: Container(
+          color: widget.monthViewSettings.agendaStyle.backgroundColor ?? _calendarTheme.agendaBackgroundColor,
+          child: MouseRegion(
+            onEnter: (PointerEnterEvent event) {
+              _pointerEnterEvent(event, false, isRTL);
+            },
+            onExit: _pointerExitEvent,
+            onHover: (PointerHoverEvent event) {
+              _pointerHoverEvent(event, false, isRTL);
+            },
+            child: GestureDetector(
+              child: Stack(children: <Widget>[
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    size: 18,
+                                    color: Color(0xff009CDA),
+                                  ),
+                                  VerticalDivider(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'เวรปกติ',
+                                    style: TextStyle(color: Colors.white),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    size: 18,
+                                    color: Color(0xffFBB03B),
+                                  ),
+                                  VerticalDivider(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'เวรทำงานล่วงเวลา',
+                                    style: TextStyle(color: Colors.white),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    size: 18,
+                                    color: Colors.grey[800],
+                                  ),
+                                  VerticalDivider(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'วันหยุด',
+                                    style: TextStyle(color: Colors.white),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        Positioned(
-                          top: 0,
-                          left: isRTL ? 0 : _agendaDateViewWidth,
-                          right: isRTL ? _agendaDateViewWidth : 0,
-                          bottom: 0,
-                          child: ListView(
-                            padding: const EdgeInsets.all(0.0),
-                            controller: _agendaScrollController,
-                            children: <Widget>[
-                              AgendaViewLayout(
-                                  widget.monthViewSettings,
-                                  null,
-                                  currentSelectedDate,
-                                  agendaAppointments,
-                                  isRTL,
-                                  _locale,
-                                  _localizations,
-                                  _calendarTheme,
-                                  _agendaViewNotifier,
-                                  widget.appointmentTimeTextFormat,
-                                  _agendaDateViewWidth,
-                                  _textScaleFactor,
-                                  _isMobilePlatform,
-                                  widget.appointmentBuilder,
-                                  width - _agendaDateViewWidth,
-                                  painterHeight,
-                                  widget),
-                            ],
-                          ),
-                        ),
-                      ]),
-                      onTapUp: (TapUpDetails details) {
-                        _handleTapForAgenda(details, _selectedDate!);
-                      },
-                      onLongPressStart: (LongPressStartDetails details) {
-                        _handleLongPressForAgenda(details, _selectedDate!);
-                      },
-                    )))));
+                      ),
+                      Divider(
+                        color: Color(0xff1A6587),
+                        thickness: 1.5,
+                        indent: 10,
+                        endIndent: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 40),
+                  child: CustomPaint(
+                    painter: _AgendaDateTimePainter(
+                        currentSelectedDate,
+                        widget.monthViewSettings,
+                        null,
+                        widget.todayHighlightColor ?? _calendarTheme.todayHighlightColor,
+                        widget.todayTextStyle,
+                        _locale,
+                        _calendarTheme,
+                        _agendaDateNotifier,
+                        _minWidth,
+                        isRTL,
+                        _textScaleFactor,
+                        _isMobilePlatform),
+                    size: Size(_agendaDateViewWidth, height),
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  left: isRTL ? 0 : _agendaDateViewWidth,
+                  right: isRTL ? _agendaDateViewWidth : 0,
+                  bottom: 0,
+                  child: ListView(
+                    padding: const EdgeInsets.all(0.0),
+                    controller: _agendaScrollController,
+                    children: <Widget>[
+                      AgendaViewLayout(
+                          widget.monthViewSettings,
+                          null,
+                          currentSelectedDate,
+                          agendaAppointments,
+                          isRTL,
+                          _locale,
+                          _localizations,
+                          _calendarTheme,
+                          _agendaViewNotifier,
+                          widget.appointmentTimeTextFormat,
+                          _agendaDateViewWidth,
+                          _textScaleFactor,
+                          _isMobilePlatform,
+                          widget.appointmentBuilder,
+                          width - _agendaDateViewWidth,
+                          painterHeight,
+                          widget),
+                    ],
+                  ),
+                ),
+              ]),
+              onTapUp: (TapUpDetails details) {
+                _handleTapForAgenda(details, _selectedDate!);
+              },
+              onLongPressStart: (LongPressStartDetails details) {
+                _handleLongPressForAgenda(details, _selectedDate!);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
